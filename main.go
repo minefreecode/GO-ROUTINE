@@ -7,21 +7,29 @@ import (
 
 func main() {
 
+	// Получает настоящее время
 	t0 := time.Now()
 
+	//Созаёт канал для объения между го рутинами
 	channel := make(chan string)
+	//Создаётся другой канал для общения между горутинами
 	anotherChannel := make(chan string)
 
+	//Запускаем функцию асинхронно и заносим в его канал данные
 	go func() {
 		channel <- "data"
 	}()
+	//Запускаем другую функцию асинхронно и заносим туда другие данные
 	go func() {
 		anotherChannel <- "another-data"
 	}()
 
+	//Ожидаем когда в канале будут достигнуты условия
 	select {
+	// Условие что в канала что-то есть
 	case msg1 := <-channel:
 		fmt.Println(msg1)
+	//Условие что в другом канале что-то есть
 	case msg2 := <-anotherChannel:
 		fmt.Println(msg2)
 	}
@@ -30,9 +38,10 @@ func main() {
 }
 
 func printComplete(t time.Time) {
+	// Форматирвоание текста в целеный цвет
 	green := "\033[32m"
 	reset := "\033[0m"
 
-	// Print the text in green
-	fmt.Printf("\n%scompleted in: %v%s", green, time.Since(t), reset)
+	//Печать сколько времени запрос выполяется
+	fmt.Printf("\n%sзавершено в: %v%s", green, time.Since(t), reset)
 }
